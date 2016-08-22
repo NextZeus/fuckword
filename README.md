@@ -16,8 +16,11 @@ if(isIllegal){
 ```
 
 ### transfer content` word which contains fuck word  to *
+```javascript
+
 var fuckword = require('fuckword');
 var name = 'fuck you !!!!';
 var transferedContent = fuckword.transferChatContent(name,"*");
 
 console.log('name contains fuck word');
+```
