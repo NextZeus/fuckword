@@ -44,25 +44,23 @@ exports.init = function(){
 }
 
 /**
- *  判断角色名是否包含非法字符
- * @param name 角色名
+ * check name contains fuck word
+ * @param name
  * @returns {boolean}
  */
-exports.checkNickNameIllegal = function(name){
+exports.checkNameIllegal = function(name){
     var str = '';
     var keys = [];
     for(var i = 0; i < name.length ; i++){
         var ch = name.charAt(i);
         keys.push(ch);
         var index = '["' + keys.join('"]["') +'"]';
-        console.log('index--->>>',index);
         console.log(eval('wordConfig' + index));
         if(!!eval('wordConfig' + index)){
             for(var j = i + 1 ; j < name.length; j ++ ){
                 var ch2 = name.charAt(j);
                 keys.push(ch2);
                 var index2 = '["' + keys.join('"]["') +'"]';
-                console.log('index2---->>',index2);
                 if( !!eval(('wordConfig' + index2)) ){ // 能拿到最后的fuck  说明完全匹配了
                     if(!!eval(('wordConfig' + index2 + '["fuck"]'))){
                         return true;
@@ -78,12 +76,12 @@ exports.checkNickNameIllegal = function(name){
 }
 
 /**
- * 聊天 屏蔽词过滤
+ * transfer fuck word to *
  * @param name
  * @param to
  * @returns {*}
  */
-exports.checkChatContentFuckWord = function(name,to){
+exports.transferChatContent = function(name,to){
     var str = '';
     var keys = [];
     var record = [];

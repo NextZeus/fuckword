@@ -1,5 +1,5 @@
 {
-  "name": "fuckwords",
+  "name": "fuckword",
   "version": "1.0.0",
   "description": "inspect fuck words in the content",
   "main": "index.js",
