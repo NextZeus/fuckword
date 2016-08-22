@@ -1,6 +1,6 @@
 {
   "name": "fuckword",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "inspect fuck words in the content",
   "main": "index.js",
   "directories": {
