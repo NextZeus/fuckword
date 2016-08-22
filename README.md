@@ -22,5 +22,6 @@ var fuckword = require('fuckword');
 var name = 'fuck you !!!!';
 var transferedContent = fuckword.transferChatContent(name,"*");
 
-console.log('name contains fuck word');
+console.log('transferedContent is :',transferedContent);
+//the result is -->>>transferedContent is :***k you !!!
 ```

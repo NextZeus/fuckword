@@ -55,7 +55,6 @@ exports.checkNameIllegal = function(name){
         var ch = name.charAt(i);
         keys.push(ch);
         var index = '["' + keys.join('"]["') +'"]';
-        console.log(eval('wordConfig' + index));
         if(!!eval('wordConfig' + index)){
             for(var j = i + 1 ; j < name.length; j ++ ){
                 var ch2 = name.charAt(j);

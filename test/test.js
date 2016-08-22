@@ -3,8 +3,7 @@
  */
 var fuckwordModel = require('../model/fuckword');
 
-var isIllegal = fuckwordModel.checkNameIllegal('fuc');
-console.log('isiiiii',isIllegal);
+var isIllegal = fuckwordModel.checkNameIllegal('毛泽东');
 if(isIllegal){
     console.error('fuck word is illegal');
 } else {
