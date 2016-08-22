@@ -2,10 +2,15 @@
  * Created by lixd on 16/8/22.
  */
 var fs = require('fs');
-var async = require('async');
 var wordConfig = require(__dirname + '/../lib/wordConfig.js').fuckwods;
+
+function fuckword(){
+
+}
+
+
 //初始化屏蔽词库
-exports.init = function(){
+fuckword.prototype.init = function(){
     var fuckWordData = require(__dirname+'/../config/forbid.json');
     //转换屏蔽词  如 : 毛泽东 毛毛泽东 {毛:{泽:{东:{fuck:1} ,毛:{泽 : 东: {fuck : 1}}}}} appendFile
     var str = '';
@@ -48,7 +53,7 @@ exports.init = function(){
  * @param name
  * @returns {boolean}
  */
-exports.checkNameIllegal = function(name){
+fuckword.prototype.checkNameIllegal = function(name){
     var str = '';
     var keys = [];
     for(var i = 0; i < name.length ; i++){
@@ -80,7 +85,7 @@ exports.checkNameIllegal = function(name){
  * @param to
  * @returns {*}
  */
-exports.transferChatContent = function(name,to){
+fuckword.prototype.transferChatContent = function(name,to){
     var str = '';
     var keys = [];
     var record = [];
@@ -115,3 +120,5 @@ exports.transferChatContent = function(name,to){
     }
     return name;
 }
+
+module.exports = new fuckword();
