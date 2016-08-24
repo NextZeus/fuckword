@@ -20,7 +20,7 @@ if(isIllegal){
 
 var fuckword = require('fuckword');
 var name = 'fuck you !!!!';
-var transferedContent = fuckword.transferChatContent(name,"*");
+var transferedContent = fuckword.transferContent(name,"*");
 
 console.log('transferedContent is :',transferedContent);
 //the result is -->>>transferedContent is :***k you !!!

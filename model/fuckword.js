@@ -2,27 +2,39 @@
  * Created by lixd on 16/8/22.
  */
 var fs = require('fs');
-var wordConfig = require(__dirname + '/../lib/wordConfig.js').fuckwods;
 var async = require('async');
 
-
-function fuckword(init){
-    if(init){//init your fuck word config
+function FuckWord(opt){
+    this.configDir = opt.configDir;//fuckword.txt dir
+    if(opt.init){//init your fuck word config
         this.generateConfig();
     }
 
+    this.wordConfig = null;
+
+    if(!opt.init){
+        var filePath = __dirname + '/../lib/wordConfig.js';
+        var filestat = fs.statSync(filePath);
+        if(filestat.isFile()){
+            var wordConfig = require(filePath).fuckwods;
+            if(!!wordConfig){
+                this.wordConfig = wordConfig;
+            }
+        }
+    }
 }
 
 /**
  * put your fuckword.txt in config directory
  */
-fuckword.prototype.generateConfig = function () {
+FuckWord.prototype.generateConfig = function () {
+    var self = this;
     async.waterfall([
         function (cb) {
-            generateForbidJson(cb);
+            self.generateForbidJson(cb);
         },
         function (cb) {
-            initWordConfig(cb);
+            self.initWordConfig(cb);
         }
     ], function (err) {
         if(!!err){
@@ -39,17 +51,32 @@ fuckword.prototype.generateConfig = function () {
  * if you want to generate your config , call this function and init function
  * generate forbid json file by fuckword2016.txt
  */
-function generateForbidJson (next) {
+FuckWord.prototype.generateForbidJson = function(next) {
+    var self = this;
     var fuckwords;
     var fuckwordArray;
 
-    fs.readFile('../config/fuckword.txt','utf8', function (err,data) {
+    var filePath = self.configDir+'fuckword.txt';
+    var fileStat = fs.statSync(filePath);
+    if(!fileStat.isFile()){
+        throw new Error('File Path Error!');
+    }
+
+    fs.readFile(this.configDir+'fuckword.txt','utf8', function (err,data) {
         if(!err && !!data){
             fuckwords = data;
             fuckwordArray = fuckwords.split('、');
+
             console.log(fuckwordArray[0],fuckwordArray.length);
-            fs.writeFileSync('../config/forbid.json',JSON.stringify(fuckwordArray));
-            next();
+            for(var i = 0 ; i < fuckwordArray.length; i++){
+                fuckwordArray[i] = {
+                    forbid  :   fuckwordArray[i]
+                };
+            }
+
+            fs.writeFile('../config/forbid.json',JSON.stringify(fuckwordArray),null, function () {
+                next();
+            });
         } else {
             throw new Error('Generate config file error!!!');
         }
@@ -57,7 +84,9 @@ function generateForbidJson (next) {
 }
 
 //init lib wordConfig.js
-function initWordConfig (next){
+FuckWord.prototype.initWordConfig = function(next){
+    var self = this;
+
     var fuckWordData = require('../config/forbid.json');
     //transfer  example : ABC  {A:{B:{C:{fuck:1}
     var str = '';
@@ -82,8 +111,9 @@ function initWordConfig (next){
         }
         str = str.substring(0,str.length -2);
         str = 'exports.fuckwods = ' + '{' + str + '}}';
-        fs.writeFile(__dirname + '/../lib/wordConfig.js',str,null,function(err,info){
+        fs.writeFile(__dirname + '/../lib/wordConfig.js',str,null,function(err){
             if(!err){
+                self.wordConfig = require(__dirname + '/../lib/wordConfig.js').fuckwods;
                 console.log('Init WordConfig Success!!!');
                 next();
             }else{
@@ -98,23 +128,30 @@ function initWordConfig (next){
  * @param name
  * @returns {boolean}
  */
-fuckword.prototype.checkNameIllegal = function(name){
-    var str = '';
+FuckWord.prototype.checkNameIllegal = function(name){
+    var self = this;
+    if(!self.wordConfig){
+        return false;
+    }
+
     var keys = [];
     for(var i = 0; i < name.length ; i++){
         var ch = name.charAt(i);
         keys.push(ch);
         var index = '["' + keys.join('"]["') +'"]';
-        if(!!eval('wordConfig' + index)){
+        console.log('index-->>>',index,eval('self.wordConfig'+index));
+        if(!!eval('self.wordConfig' + index)){
             for(var j = i + 1 ; j < name.length; j ++ ){
                 var ch2 = name.charAt(j);
                 keys.push(ch2);
                 var index2 = '["' + keys.join('"]["') +'"]';
-                if( !!eval(('wordConfig' + index2)) ){ // 能拿到最后的fuck  说明完全匹配了
-                    if(!!eval(('wordConfig' + index2 + '["fuck"]'))){
+                console.log('index2-->>>',index2);
+                if( !!eval(('self.wordConfig' + index2)) ){ // 能拿到最后的fuck  说明完全匹配了
+                    if(!!eval(('self.wordConfig' + index2 + '["fuck"]'))){
                         return true;
                     }
                 } else {
+                    console.log('break----');
                     break;
                 }
             }
@@ -130,21 +167,24 @@ fuckword.prototype.checkNameIllegal = function(name){
  * @param to
  * @returns {*}
  */
-fuckword.prototype.transferChatContent = function(name,to){
-    var str = '';
+FuckWord.prototype.transferContent = function(name,to){
+    var self = this;
+    if(!self.wordConfig){
+        return false;
+    }
     var keys = [];
     var record = [];
     for(var i = 0; i < name.length ; i++){
         var ch = name.charAt(i);
         keys.push(ch);
         var index = '["' + keys.join('"]["') +'"]';
-        if(!!eval('wordConfig' + index)){
+        if(!!eval('self.wordConfig' + index)){
             for(var j = i + 1 ; j < name.length; j ++ ){
                 var ch2 = name.charAt(j);
                 keys.push(ch2);
                 var index2 = '["' + keys.join('"]["') +'"]';
-                if( !!eval(('wordConfig' + index2)) ){ // 能拿到最后的fuck  说明完全匹配了
-                    if(!!eval(('wordConfig' + index2 + '["fuck"]'))){
+                if( !!eval(('self.wordConfig' + index2)) ){ // 能拿到最后的fuck  说明完全匹配了
+                    if(!!eval(('self.wordConfig' + index2 + '["fuck"]'))){
                         record.push(keys.join(''));
                     }
                 }else{
@@ -166,4 +206,4 @@ fuckword.prototype.transferChatContent = function(name,to){
     return name;
 }
 
-module.exports = new fuckword();
+module.exports = FuckWord;

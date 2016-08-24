@@ -1,13 +1,11 @@
-var fs = require('fs');
-var fuckwords;
-var fuckwordArray;
+var fuckword = require('../index');
 
-fs.readFile('../fuckword2016.txt','utf8', function (err,data) {
-    //console.log(err,data);
-    if(!err && !!data){
-        fuckwords = data;
-        fuckwordArray = fuckwords.split('、');
-        console.log(fuckwordArray[0],fuckwordArray.length);
-        fs.writeFileSync('../forbid.json',JSON.stringify(fuckwordArray));
-    }
-});
+var opt = {
+    configDir   :   __dirname+'/config/',
+    init        :   false
+}
+
+var fuckWordModel = new fuckword(opt);
+
+var res = fuckWordModel.checkNameIllegal('毛主席');
+console.log(res);
