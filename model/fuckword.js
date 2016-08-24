@@ -6,16 +6,22 @@ var wordConfig = require(__dirname + '/../lib/wordConfig.js').fuckwods;
 var async = require('async');
 
 
-function fuckword(){
+function fuckword(init){
+    if(init){//init your fuck word config
+        this.generateConfig();
+    }
 
 }
 
+/**
+ * put your fuckword.txt in config directory
+ */
 fuckword.prototype.generateConfig = function () {
     async.waterfall([
         function (cb) {
             generateForbidJson(cb);
         },
-        function () {
+        function (cb) {
             initWordConfig(cb);
         }
     ], function (err) {
@@ -29,7 +35,7 @@ fuckword.prototype.generateConfig = function () {
 
 
 /**
- * fuckword2016.txt file contains all fuck words in 2016
+ * config/fuckword2016.txt file contains all fuck words in 2016
  * if you want to generate your config , call this function and init function
  * generate forbid json file by fuckword2016.txt
  */
@@ -37,7 +43,7 @@ function generateForbidJson (next) {
     var fuckwords;
     var fuckwordArray;
 
-    fs.readFile(__dirname + '../config/fuckword2016.txt','utf8', function (err,data) {
+    fs.readFile('../config/fuckword.txt','utf8', function (err,data) {
         if(!err && !!data){
             fuckwords = data;
             fuckwordArray = fuckwords.split('、');
@@ -52,8 +58,8 @@ function generateForbidJson (next) {
 
 //init lib wordConfig.js
 function initWordConfig (next){
-    var fuckWordData = require(__dirname+'/../config/forbid.json');
-    //转换屏蔽词  如 : 毛泽东 毛毛泽东 {毛:{泽:{东:{fuck:1} ,毛:{泽 : 东: {fuck : 1}}}}} appendFile
+    var fuckWordData = require('../config/forbid.json');
+    //transfer  example : ABC  {A:{B:{C:{fuck:1}
     var str = '';
     if(!!fuckWordData && fuckWordData.length > 0){
         for(var i = 0; i < fuckWordData.length; i++){
@@ -81,10 +87,9 @@ function initWordConfig (next){
         str = 'exports.fuckwods = ' + '{' + str + '}}';
         fs.writeFile(__dirname + '/../lib/wordConfig.js',str,null,function(err,info){
             if(!err){
-                console.log('屏蔽词库初始化成功');
+                console.log('Init WordConfig Success!!!');
                 next();
             }else{
-                console.log('屏蔽词库初始化失败===>>',err);
                 throw new Error('Init WordConfig error!!!');
             }
         });
