@@ -18,5 +18,8 @@
     "word"
   ],
   "author": "xiaodong.li",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.0.1"
+  }
 }

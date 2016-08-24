@@ -3,11 +3,29 @@
  */
 var fs = require('fs');
 var wordConfig = require(__dirname + '/../lib/wordConfig.js').fuckwods;
+var async = require('async');
+
 
 function fuckword(){
 
 }
 
+fuckword.prototype.generateConfig = function () {
+    async.waterfall([
+        function (cb) {
+            generateForbidJson(cb);
+        },
+        function () {
+            initWordConfig(cb);
+        }
+    ], function (err) {
+        if(!!err){
+            throw new Error('Generate Config Error!!!');
+        } else {
+            console.info('Generate Config Success!!!');
+        }
+    });
+}
 
 
 /**
@@ -15,11 +33,11 @@ function fuckword(){
  * if you want to generate your config , call this function and init function
  * generate forbid json file by fuckword2016.txt
  */
-fuckword.prototype.generateForbidJsonConfig = function (next) {
+function generateForbidJson (next) {
     var fuckwords;
     var fuckwordArray;
 
-    fs.readFile('../config/fuckword2016.txt','utf8', function (err,data) {
+    fs.readFile(__dirname + '../config/fuckword2016.txt','utf8', function (err,data) {
         if(!err && !!data){
             fuckwords = data;
             fuckwordArray = fuckwords.split('、');
@@ -33,7 +51,7 @@ fuckword.prototype.generateForbidJsonConfig = function (next) {
 }
 
 //init lib wordConfig.js
-fuckword.prototype.init = function(next){
+function initWordConfig (next){
     var fuckWordData = require(__dirname+'/../config/forbid.json');
     //转换屏蔽词  如 : 毛泽东 毛毛泽东 {毛:{泽:{东:{fuck:1} ,毛:{泽 : 东: {fuck : 1}}}}} appendFile
     var str = '';
