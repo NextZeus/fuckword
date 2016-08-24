@@ -9,8 +9,31 @@ function fuckword(){
 }
 
 
-//初始化屏蔽词库
-fuckword.prototype.init = function(){
+
+/**
+ * fuckword2016.txt file contains all fuck words in 2016
+ * if you want to generate your config , call this function and init function
+ * generate forbid json file by fuckword2016.txt
+ */
+fuckword.prototype.generateForbidJsonConfig = function (next) {
+    var fuckwords;
+    var fuckwordArray;
+
+    fs.readFile('../config/fuckword2016.txt','utf8', function (err,data) {
+        if(!err && !!data){
+            fuckwords = data;
+            fuckwordArray = fuckwords.split('、');
+            console.log(fuckwordArray[0],fuckwordArray.length);
+            fs.writeFileSync('../config/forbid.json',JSON.stringify(fuckwordArray));
+            next();
+        } else {
+            throw new Error('Generate config file error!!!');
+        }
+    });
+}
+
+//init lib wordConfig.js
+fuckword.prototype.init = function(next){
     var fuckWordData = require(__dirname+'/../config/forbid.json');
     //转换屏蔽词  如 : 毛泽东 毛毛泽东 {毛:{泽:{东:{fuck:1} ,毛:{泽 : 东: {fuck : 1}}}}} appendFile
     var str = '';
@@ -38,11 +61,13 @@ fuckword.prototype.init = function(){
         }
         str = str.substring(0,str.length -2);
         str = 'exports.fuckwods = ' + '{' + str + '}}';
-        fs.writeFile(__dirname + '/wordConfig.js',str,null,function(err,info){
+        fs.writeFile(__dirname + '/../lib/wordConfig.js',str,null,function(err,info){
             if(!err){
                 console.log('屏蔽词库初始化成功');
+                next();
             }else{
                 console.log('屏蔽词库初始化失败===>>',err);
+                throw new Error('Init WordConfig error!!!');
             }
         });
     }

@@ -1,14 +1,13 @@
-/**
- * Created by lixd on 16/8/22.
- */
-var fuckwordModel = require('../model/fuckword');
+var fs = require('fs');
+var fuckwords;
+var fuckwordArray;
 
-var isIllegal = fuckwordModel.checkNameIllegal('毛泽东');
-if(isIllegal){
-    console.error('fuck word is illegal');
-} else {
-    console.log('this word is legal');
-}
-
-var content = fuckwordModel.transferChatContent('fuck you !!!',"*");
-console.log(content);
+fs.readFile('../fuckword2016.txt','utf8', function (err,data) {
+    //console.log(err,data);
+    if(!err && !!data){
+        fuckwords = data;
+        fuckwordArray = fuckwords.split('、');
+        console.log(fuckwordArray[0],fuckwordArray.length);
+        fs.writeFileSync('../forbid.json',JSON.stringify(fuckwordArray));
+    }
+});
