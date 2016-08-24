@@ -66,9 +66,6 @@ function initWordConfig (next){
             if(typeof(fuckWordData[i]) == 'object' ){
                 var keys = Object.keys(fuckWordData[i]);
                 var content = fuckWordData[i][keys[0]];
-
-                var obj = {};
-                var count = 0;
                 for(var j = 0; j < content.length ;j++){
                     var ch = content.charAt(j);
                     if(ch == "\\"){
