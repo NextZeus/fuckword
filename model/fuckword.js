@@ -88,32 +88,37 @@ FuckWord.prototype.initWordConfig = function(next){
     var self = this;
 
     var fuckWordData = require('../config/forbid.json');
-    //transfer  example : ABC  {A:{B:{C:{fuck:1}
-    var str = '';
+    //transfer  example : ABC ABD {A:{B:{C:{fuck:1},D:{fuck:1}}}}
     if(!!fuckWordData && fuckWordData.length > 0){
+        var configObj = {};
         for(var i = 0; i < fuckWordData.length; i++){
+
             if(typeof(fuckWordData[i]) == 'object' ){
-                var keys = Object.keys(fuckWordData[i]);
-                var content = fuckWordData[i][keys[0]];
+                var content = fuckWordData[i].forbid;
+                var str = "";
                 for(var j = 0; j < content.length ;j++){
                     var ch = content.charAt(j);
                     if(ch == "\\"){
                         ch = '\\\\';
                     }
-                    str += '"' + ch + '"' + ' : {'
+                    str+= '["'+ch+'"]';
+                    if(!eval("configObj"+str)){
+                        if(j == content.length - 1){
+                            eval("configObj"+str + '= {"fuck":1}') ;
+                        } else {
+                            eval("configObj"+str + '= {}') ;
+                        }
+                    }
                 }
-                str += '"fuck" : 1';
-                for(var x = 0 ; x < content.length ;x++){
-                    str += "}"
-                }
-                str += ","
             }
         }
-        str = str.substring(0,str.length -2);
-        str = 'exports.fuckwods = ' + '{' + str + '}}';
-        fs.writeFile(__dirname + '/../lib/wordConfig.js',str,null,function(err){
+
+        var fileContent = "exports.fuckwods = " + JSON.stringify(configObj);
+        var resFilePath = __dirname + '/../lib/wordConfig.js';
+
+        fs.writeFile(resFilePath,fileContent,null,function(err){
             if(!err){
-                self.wordConfig = require(__dirname + '/../lib/wordConfig.js').fuckwods;
+                self.wordConfig = require(resFilePath).fuckwods;
                 console.log('Init WordConfig Success!!!');
                 next();
             }else{
@@ -133,30 +138,18 @@ FuckWord.prototype.checkNameIllegal = function(name){
     if(!self.wordConfig){
         return false;
     }
-
-    var keys = [];
+    var str = 'self.wordConfig';
     for(var i = 0; i < name.length ; i++){
-        var ch = name.charAt(i);
-        keys.push(ch);
-        var index = '["' + keys.join('"]["') +'"]';
-        console.log('index-->>>',index,eval('self.wordConfig'+index));
-        if(!!eval('self.wordConfig' + index)){
-            for(var j = i + 1 ; j < name.length; j ++ ){
-                var ch2 = name.charAt(j);
-                keys.push(ch2);
-                var index2 = '["' + keys.join('"]["') +'"]';
-                console.log('index2-->>>',index2);
-                if( !!eval(('self.wordConfig' + index2)) ){ // 能拿到最后的fuck  说明完全匹配了
-                    if(!!eval(('self.wordConfig' + index2 + '["fuck"]'))){
-                        return true;
-                    }
-                } else {
-                    console.log('break----');
-                    break;
-                }
+        var char = name.charAt(i);
+        str += '["' + char + '"]';
+        var value = eval(str);
+        if(!!value){
+            if(eval(str+'["fuck"]')){
+                return true;
             }
+        } else {
+            return false;
         }
-        keys = [];
     }
     return false;
 }

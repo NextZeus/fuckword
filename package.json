@@ -20,6 +20,7 @@
   "author": "xiaodong.li",
   "license": "ISC",
   "dependencies": {
-    "async": "^2.0.1"
+    "async": "^2.0.1",
+    "underscore": "^1.8.3"
   }
 }
