@@ -139,7 +139,7 @@ FuckWord.prototype.initWordConfig = function(next){
  * @param name
  * @returns {boolean}
  */
-FuckWord.prototype.checkNameIllegal = function(name){
+FuckWord.prototype.checkContentIllegal = function(name){
     var self = this;
     if(!self.wordConfig){
         return false;

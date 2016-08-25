@@ -6,8 +6,8 @@
 
 ```javascript
 var fuckword = require('fuckword');
-var name = 'fuck';
-var isIllegal = fuckword.checkNameIllegal(name);
+var content = 'fuck';
+var isIllegal = fuckword.checkContentIllegal(content);
 if(isIllegal){
     console.log('name contains fuck word');
 }
