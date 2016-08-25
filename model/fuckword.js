@@ -5,14 +5,20 @@ var fs = require('fs');
 var async = require('async');
 
 function FuckWord(opt){
-    this.configDir = opt.configDir;//fuckword.txt dir
-    if(opt.init){//init your fuck word config
-        this.generateConfig();
+    this.wordConfig = null;
+    var loadConfig = false;
+    if(!!opt){
+        this.configDir = opt.configDir;//fuckword.txt dir
+        if(opt.init){//init your fuck word config
+            this.generateConfig();
+        } else {
+            loadConfig = true;
+        }
+    } else {
+        loadConfig = true;
     }
 
-    this.wordConfig = null;
-
-    if(!opt.init){
+    if(loadConfig){
         var filePath = __dirname + '/../lib/wordConfig.js';
         var filestat = fs.statSync(filePath);
         if(filestat.isFile()){
@@ -199,4 +205,4 @@ FuckWord.prototype.transferContent = function(name,to){
     return name;
 }
 
-module.exports = FuckWord;
+module.exports = new FuckWord();

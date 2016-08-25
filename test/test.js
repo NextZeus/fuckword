@@ -66,3 +66,12 @@ function checkName(name){
 }
 var name = '毛泽西';
 //console.log(checkName(name));
+
+function check(){
+    var fuckword = require('../index');
+
+
+    var res = fuckword.checkNameIllegal('毛泽东');
+    console.log(res);
+}
+//check();

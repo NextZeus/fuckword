@@ -5,7 +5,6 @@
 ### check name contains fuck word
 
 ```javascript
-
 var fuckword = require('fuckword');
 var name = 'fuck';
 var isIllegal = fuckword.checkNameIllegal(name);
