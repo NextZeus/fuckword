@@ -20,10 +20,12 @@ FuckWord.prototype.init = function () {
 
     async.waterfall([
         function (cb) {
+            //读取文件
             fuckwords = fs.readFileSync(__dirname+'/../config/fuckword.txt','utf8');
             cb();
         },
         function (cb) {
+            //特殊字符
             var specialSymbol = "\\!|\\@|\\#|\\$|\\%|\\^|\\&|\\*|\\(|\\)|\\=|\\-|\\_|\\+|\\{|\\}|\\[|\\]|\\,|\\.|\\<|\\>|\\/|\\?|\\`|\\~|\\;|\\:";
             var regexp = new RegExp("("+specialSymbol+")");
 
