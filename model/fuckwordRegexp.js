@@ -55,6 +55,7 @@ FuckWord.prototype.init = function () {
         }
     ], function () {
         console.timeEnd('initfuckword');
+        console.log('init-success')
     });
 }
 
