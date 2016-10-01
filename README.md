@@ -1,5 +1,7 @@
 # fuckword
 
+[/model/fuckwordRegexp.js  使用正则表达式检测非法词]
+
 ### method
 
 ### check name contains fuck word
