@@ -1,5 +1,7 @@
 # fuckword
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/NextZeus/fuckword.svg)](https://greenkeeper.io/)
+
 [/model/fuckwordRegexp.js  使用正则表达式检测非法词]
 
 ### method
